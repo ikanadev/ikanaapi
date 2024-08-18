@@ -12,7 +12,7 @@ primary_region = 'scl'
 
 [env]
   PORT = '8080'
-	MIGRATIONS_URL = 'github://ikanadev/ikanaapi/db/migrations'
+	MIGRATIONS_SOURCE = 'file:///db/migrations'
 
 [http_service]
   internal_port = 8080

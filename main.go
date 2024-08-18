@@ -1,6 +1,9 @@
 package main
 
 import (
+	"log"
+	"net/http"
+
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/ikanadev/ikanaapi/apps/boliviaencrisis"
 	"github.com/jmoiron/sqlx"
@@ -9,7 +12,7 @@ import (
 
 	// postgres connection and migration
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
-	_ "github.com/golang-migrate/migrate/v4/source/github"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
 )
 
@@ -27,11 +30,15 @@ func main() {
 
 	app.Use(middleware.CORS())
 	boliviaencrisis.SetupServer(app, db)
-	panicIfErr(app.Start(":" + config.Port))
+	app.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "Running")
+	})
+	panicIfErr(app.Start("0.0.0.0:" + config.Port))
 }
 
 func migrateDB(config Config) {
-	migrator, err := migrate.New(config.MigrationsURL, config.DBConn)
+	migrator, err := migrate.New(config.MigrationsSource, config.DBConn)
+	log.Println("ERROR", err)
 	panicIfErr(err)
 	if err := migrator.Up(); err != nil && err != migrate.ErrNoChange {
 		panicIfErr(err)
