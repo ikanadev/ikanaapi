@@ -6,6 +6,11 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+
+	// postgres connection and migration
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/github"
+	_ "github.com/lib/pq"
 )
 
 func panicIfErr(err error) {
@@ -22,7 +27,7 @@ func main() {
 
 	app.Use(middleware.CORS())
 	boliviaencrisis.SetupServer(app, db)
-	panicIfErr(app.Start(config.Port))
+	panicIfErr(app.Start(":" + config.Port))
 }
 
 func migrateDB(config Config) {

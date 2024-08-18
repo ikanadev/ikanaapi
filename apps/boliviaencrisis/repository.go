@@ -16,7 +16,7 @@ type BoliviaCrisisRepositoryImpl struct {
 // GetUSTDPrices implements BoliviaCrisisRepository.
 func (r BoliviaCrisisRepositoryImpl) GetUSTDPrices() ([]USTDPrice, error) {
 	var dbPrices []DbUSTDPrice
-	err := r.db.Select(&dbPrices, "SELECT * FROM ustd_price order by created_at desc")
+	err := r.db.Select(&dbPrices, "SELECT * FROM ustd_price order by created_at desc;")
 	if err != nil {
 		return nil, err
 	}

@@ -11,7 +11,7 @@ type Server struct {
 }
 
 func (s Server) setupRoutes() {
-	s.app.GET("/prices", getUSTDPrices(s.repo))
+	s.app.GET("/prices/ustd", getUSTDPrices(s.repo))
 }
 
 func newServer(app *echo.Group, repo BoliviaCrisisRepository) Server {
