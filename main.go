@@ -33,7 +33,7 @@ func main() {
 	app.Use(middleware.CORS())
 	boliviaencrisis.SetupServer(app, db)
 	app.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Running with cron :)")
+		return c.String(http.StatusOK, "Running again >:(")
 	})
 	setupPriceCron(db)
 	panicIfErr(app.Start("0.0.0.0:" + config.Port))
