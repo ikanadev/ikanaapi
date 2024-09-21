@@ -6,6 +6,7 @@ import (
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/ikanadev/ikanaapi/apps/boliviaencrisis"
+	"github.com/ikanadev/ikanaapi/apps/common"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -32,9 +33,12 @@ func main() {
 
 	app.Use(middleware.CORS())
 	boliviaencrisis.SetupServer(app, db)
+	common.SetupServer(app, db)
+
 	app.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Running again >:(")
 	})
+
 	setupPriceCron(db)
 	panicIfErr(app.Start("0.0.0.0:" + config.Port))
 }
