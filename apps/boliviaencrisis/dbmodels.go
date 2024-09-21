@@ -5,14 +5,14 @@ import (
 	"github.com/ikanadev/ikanaapi/common"
 )
 
-type DbUSTDPrice struct {
+type DbUSDTPrice struct {
 	ID    uuid.UUID `db:"id"`
 	Price int64     `db:"price"`
 	common.DBTimeData
 }
 
-func (dbPrice DbUSTDPrice) ToUSTDPrice() USTDPrice {
-	return USTDPrice{
+func (dbPrice DbUSDTPrice) ToUSDTPrice() USDTPrice {
+	return USDTPrice{
 		ID:    dbPrice.ID,
 		Price: dbPrice.Price,
 		TimeData: common.TimeData{

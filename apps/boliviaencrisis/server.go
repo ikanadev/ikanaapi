@@ -11,7 +11,7 @@ type Server struct {
 }
 
 func (s Server) setupRoutes() {
-	s.app.GET("/prices/usdt", getUSTDPrices(s.repo))
+	s.app.GET("/prices/usdt", getUSDTPrices(s.repo))
 	s.app.GET("/main", getMainPageData(s.repo))
 }
 

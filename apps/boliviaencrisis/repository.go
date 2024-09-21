@@ -5,41 +5,41 @@ import (
 )
 
 type BoliviaCrisisRepository interface {
-	GetAllUSTDPrices() ([]USTDPrice, error)
-	GetLastUSTDPrices() ([]USTDPrice, error)
+	GetAllUSDTPrices() ([]USDTPrice, error)
+	GetLastUSDTPrices() ([]USDTPrice, error)
 }
 
 type BoliviaCrisisRepositoryImpl struct {
 	db *sqlx.DB
 }
 
-// GetLastUSTDPrices implements BoliviaCrisisRepository.
-func (r BoliviaCrisisRepositoryImpl) GetLastUSTDPrices() ([]USTDPrice, error) {
-	var dbPrices []DbUSTDPrice
+// GetLastUSDTPrices implements BoliviaCrisisRepository.
+func (r BoliviaCrisisRepositoryImpl) GetLastUSDTPrices() ([]USDTPrice, error) {
+	var dbPrices []DbUSDTPrice
 	err := r.db.Select(&dbPrices, "SELECT * FROM ustd_price order by created_at desc limit 15;")
 	if err != nil {
 		return nil, err
 	}
 
-	prices := make([]USTDPrice, len(dbPrices))
+	prices := make([]USDTPrice, len(dbPrices))
 	for i, dbPrice := range dbPrices {
-		prices[i] = dbPrice.ToUSTDPrice()
+		prices[i] = dbPrice.ToUSDTPrice()
 	}
 
 	return prices, err
 }
 
-// GetAllUSTDPrices implements BoliviaCrisisRepository.
-func (r BoliviaCrisisRepositoryImpl) GetAllUSTDPrices() ([]USTDPrice, error) {
-	var dbPrices []DbUSTDPrice
+// GetAllUSDTPrices implements BoliviaCrisisRepository.
+func (r BoliviaCrisisRepositoryImpl) GetAllUSDTPrices() ([]USDTPrice, error) {
+	var dbPrices []DbUSDTPrice
 	err := r.db.Select(&dbPrices, "SELECT * FROM ustd_price order by created_at desc;")
 	if err != nil {
 		return nil, err
 	}
 
-	prices := make([]USTDPrice, len(dbPrices))
+	prices := make([]USDTPrice, len(dbPrices))
 	for i, dbPrice := range dbPrices {
-		prices[i] = dbPrice.ToUSTDPrice()
+		prices[i] = dbPrice.ToUSDTPrice()
 	}
 
 	return prices, nil

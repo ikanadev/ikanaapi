@@ -21,13 +21,13 @@ func setupPriceCron(db *sqlx.DB) {
 	// cronExp := "*/5 * * * *" // each 5 minutes
 	cronExp := "0 10,22 * * *" // each day at 06 and 18 hours
 	_, err := c.AddFunc(cronExp, func() {
-		fetchUSTDPrices(db)
+		fetchUSDTPrices(db)
 	})
 	panicIfErr(err)
 	c.Start()
 }
 
-type USTDResp struct {
+type USDTResp struct {
 	Data []struct {
 		Adv struct {
 			Price string `json:"price"`
@@ -35,7 +35,7 @@ type USTDResp struct {
 	} `json:"data"`
 }
 
-func fetchUSTDPrices(db *sqlx.DB) {
+func fetchUSDTPrices(db *sqlx.DB) {
 	url := "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
 	jsonStr := `{
 			"fiat": "BOB",
@@ -75,16 +75,16 @@ func fetchUSTDPrices(db *sqlx.DB) {
 		return
 	}
 
-	var data USTDResp
+	var data USDTResp
 	err = json.Unmarshal(body, &data)
 	if err != nil {
 		log.Println("ERROR: unmarshaling body", err)
 		return
 	}
-	calculateAndSaveUSTDPrice(data, db)
+	calculateAndSaveUSDTPrice(data, db)
 }
 
-func calculateAndSaveUSTDPrice(data USTDResp, db *sqlx.DB) {
+func calculateAndSaveUSDTPrice(data USDTResp, db *sqlx.DB) {
 	var totalPrice int64
 	for i := range data.Data {
 		priceResp := data.Data[i]

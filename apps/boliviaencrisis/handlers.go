@@ -6,9 +6,9 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func getUSTDPrices(repo BoliviaCrisisRepository) echo.HandlerFunc {
+func getUSDTPrices(repo BoliviaCrisisRepository) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		prices, err := repo.GetAllUSTDPrices()
+		prices, err := repo.GetAllUSDTPrices()
 		if err != nil {
 			return err
 		}
@@ -18,7 +18,7 @@ func getUSTDPrices(repo BoliviaCrisisRepository) echo.HandlerFunc {
 
 func getMainPageData(repo BoliviaCrisisRepository) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		prices, err := repo.GetLastUSTDPrices()
+		prices, err := repo.GetLastUSDTPrices()
 		if err != nil {
 			return err
 		}
@@ -29,8 +29,8 @@ func getMainPageData(repo BoliviaCrisisRepository) echo.HandlerFunc {
 		}
 
 		return c.JSON(http.StatusOK, MainPageData{
-			USTDPrice:       lastPrice,
-			LastUSTDRecords: prices,
+			USDTPrice:       lastPrice,
+			LastUSDTRecords: prices,
 		})
 	}
 }

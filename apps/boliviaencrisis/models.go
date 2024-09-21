@@ -5,13 +5,13 @@ import (
 	"github.com/ikanadev/ikanaapi/common"
 )
 
-type USTDPrice struct {
+type USDTPrice struct {
 	ID    uuid.UUID `json:"id"`
 	Price int64     `json:"price"`
 	common.TimeData
 }
 
 type MainPageData struct {
-	USTDPrice       int64       `json:"ustdPrice"`
-	LastUSTDRecords []USTDPrice `json:"lastUSTDRecords"`
+	USDTPrice       int64       `json:"usdtPrice"`
+	LastUSDTRecords []USDTPrice `json:"lastUsdtRecords"`
 }
