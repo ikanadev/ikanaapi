@@ -10,3 +10,8 @@ type USTDPrice struct {
 	Price int64     `json:"price"`
 	common.TimeData
 }
+
+type MainPageData struct {
+	USTDPrice       int64       `json:"ustdPrice"`
+	LastUSTDRecords []USTDPrice `json:"lastUSTDRecords"`
+}
