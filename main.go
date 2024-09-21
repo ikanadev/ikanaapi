@@ -36,7 +36,7 @@ func main() {
 	common.SetupServer(app, db)
 
 	app.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Running again >:(")
+		return c.String(http.StatusOK, "Running...")
 	})
 
 	setupPriceCron(db)
