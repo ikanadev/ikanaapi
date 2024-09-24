@@ -17,7 +17,7 @@ import (
 )
 
 func setupPriceCron(db *sqlx.DB) {
-	c := cron.New()
+	c := cron.New(cron.WithLocation(time.UTC))
 	// cronExp := "*/5 * * * *" // each 5 minutes
 	cronExp := "0 10,22 * * *" // each day at 06 and 18 hours
 	_, err := c.AddFunc(cronExp, func() {
