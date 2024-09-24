@@ -25,7 +25,7 @@ func getMainPageData(repo BoliviaCrisisRepository) echo.HandlerFunc {
 
 		var lastPrice int64 = 0
 		if len(prices) > 0 {
-			lastPrice = prices[0].Price
+			lastPrice = prices[len(prices)-1].Price
 		}
 
 		return c.JSON(http.StatusOK, MainPageData{
