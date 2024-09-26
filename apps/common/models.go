@@ -7,9 +7,10 @@ import (
 )
 
 type PageViewRecordData struct {
-	App    string `json:"app"`
-	UserID string `json:"userId"`
-	URL    string `json:"url"`
+	App    string   `json:"app"`
+	UserID string   `json:"userId"`
+	URL    string   `json:"url"`
+	Ips    []string `json:"ips"`
 }
 
 type PageViewRecord struct {

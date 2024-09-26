@@ -22,12 +22,13 @@ func (r CommonRepositoryImpl) SavePageViewRecord(data PageViewRecordData) error 
 		App:       data.App,
 		UserID:    data.UserID,
 		URL:       data.URL,
+		Ips:       data.Ips,
 		CreatedAt: time.Now().UTC(),
 	}
 	sql := `INSERT INTO page_view_record
-	(id, app, user_id, url, created_at)
+	(id, app, user_id, url, ips, created_at)
 	VALUES
-	(:id, :app, :user_id, :url, :created_at);`
+	(:id, :app, :user_id, :url, :ips, :created_at);`
 	_, err := r.db.NamedExec(sql, dbData)
 	return err
 }

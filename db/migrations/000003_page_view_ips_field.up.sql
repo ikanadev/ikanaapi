@@ -1,0 +1,1 @@
+ALTER TABLE page_view_record ADD COLUMN ips VARCHAR(255)[] NOT NULL DEFAULT '{}';

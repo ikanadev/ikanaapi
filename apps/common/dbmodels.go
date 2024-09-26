@@ -4,14 +4,16 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 )
 
 type DbPageViewRecord struct {
-	ID        uuid.UUID `db:"id"`
-	App       string    `db:"app"`
-	UserID    string    `db:"user_id"`
-	URL       string    `db:"url"`
-	CreatedAt time.Time `db:"created_at"`
+	ID        uuid.UUID      `db:"id"`
+	App       string         `db:"app"`
+	UserID    string         `db:"user_id"`
+	URL       string         `db:"url"`
+	Ips       pq.StringArray `db:"ips"`
+	CreatedAt time.Time      `db:"created_at"`
 }
 
 func (pageViewRecord DbPageViewRecord) ToPageViewRecord() PageViewRecord {
@@ -22,6 +24,7 @@ func (pageViewRecord DbPageViewRecord) ToPageViewRecord() PageViewRecord {
 			App:    pageViewRecord.App,
 			UserID: pageViewRecord.UserID,
 			URL:    pageViewRecord.URL,
+			Ips:    pageViewRecord.Ips,
 		},
 	}
 }
