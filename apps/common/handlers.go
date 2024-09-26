@@ -41,6 +41,6 @@ func postPageViewRecord(repo CommonRepository) echo.HandlerFunc {
 		if err := repo.SavePageViewRecord(data); err != nil {
 			return err
 		}
-		return c.NoContent(http.StatusOK)
+		return c.NoContent(http.StatusCreated)
 	}
 }
