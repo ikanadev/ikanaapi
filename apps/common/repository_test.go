@@ -37,6 +37,7 @@ func TestCommonRepositoryImpl(t *testing.T) {
 		assert.NoError(t, err)
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
+
 	t.Run("SavePageViewRecord error", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
 		if err != nil {
