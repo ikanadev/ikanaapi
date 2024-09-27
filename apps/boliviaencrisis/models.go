@@ -12,6 +12,8 @@ type USDTPrice struct {
 }
 
 type MainPageData struct {
-	USDTPrice       int64       `json:"usdtPrice"`
-	LastUSDTRecords []USDTPrice `json:"lastUsdtRecords"`
+	USDTPrice          int64       `json:"usdtPrice"`
+	USDTPriceLastWeek  int64       `json:"usdtPriceLastWeek"`
+	USDTPriceLastMonth int64       `json:"usdtPriceLastMonth"`
+	LastUSDTRecords    []USDTPrice `json:"lastUsdtRecords"`
 }

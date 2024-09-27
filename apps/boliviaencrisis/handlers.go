@@ -2,6 +2,7 @@ package boliviaencrisis
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/labstack/echo/v4"
 )
@@ -28,9 +29,27 @@ func getMainPageData(repo BoliviaCrisisRepository) echo.HandlerFunc {
 			lastPrice = prices[len(prices)-1].Price
 		}
 
+		// Bolivia UTC time
+		location, err := time.LoadLocation("America/La_Paz")
+		if err != nil {
+			return err
+		}
+
+		now := time.Now().In(location)
+		lastWeekPrice, err := repo.GetUSDTPriceByDate(now.AddDate(0, 0, -7))
+		if err != nil {
+			return err
+		}
+		lastMonthPrice, err := repo.GetUSDTPriceByDate(now.AddDate(0, -1, 0))
+		if err != nil {
+			return err
+		}
+
 		return c.JSON(http.StatusOK, MainPageData{
-			USDTPrice:       lastPrice,
-			LastUSDTRecords: prices,
+			USDTPrice:          lastPrice,
+			USDTPriceLastWeek:  lastWeekPrice,
+			USDTPriceLastMonth: lastMonthPrice,
+			LastUSDTRecords:    prices,
 		})
 	}
 }

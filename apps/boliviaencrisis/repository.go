@@ -1,16 +1,32 @@
 package boliviaencrisis
 
 import (
+	"time"
+
 	"github.com/jmoiron/sqlx"
 )
 
 type BoliviaCrisisRepository interface {
 	GetAllUSDTPrices() ([]USDTPrice, error)
 	GetLastUSDTPrices() ([]USDTPrice, error)
+	GetUSDTPriceByDate(date time.Time) (int64, error)
 }
 
 type BoliviaCrisisRepositoryImpl struct {
 	db *sqlx.DB
+}
+
+// GetUSDTPriceByDate implements BoliviaCrisisRepository.
+func (r BoliviaCrisisRepositoryImpl) GetUSDTPriceByDate(date time.Time) (int64, error) {
+	query := `
+	SELECT COALESCE(ROUND(AVG(price)), 0) as average
+	from ustd_price
+	where DATE(created_at at time zone 'UTC-4') = $1;`
+
+	var average int64
+	err := r.db.Get(&average, query, date.Format("2006-01-02"))
+
+	return average, err
 }
 
 // GetLastUSDTPrices implements BoliviaCrisisRepository.
