@@ -18,3 +18,16 @@ type PageViewRecord struct {
 	CreatedAt time.Time `json:"createdAt"`
 	PageViewRecordData
 }
+
+type PublicFeedbackData struct {
+	App     string   `json:"app"`
+	UserID  string   `json:"userId"`
+	Ips     []string `json:"ips"`
+	Content string   `json:"text"`
+}
+
+type PublicFeedback struct {
+	ID        uuid.UUID `json:"id"`
+	CreatedAt time.Time `json:"createdAt"`
+	PublicFeedbackData
+}

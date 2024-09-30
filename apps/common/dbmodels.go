@@ -28,3 +28,25 @@ func (pageViewRecord DbPageViewRecord) ToPageViewRecord() PageViewRecord {
 		},
 	}
 }
+
+type DbPublicFeedback struct {
+	ID        uuid.UUID      `db:"id"`
+	App       string         `db:"app"`
+	UserID    string         `db:"user_id"`
+	Ips       pq.StringArray `db:"ips"`
+	Content   string         `db:"content"`
+	CreatedAt time.Time      `db:"created_at"`
+}
+
+func (publicFeedback DbPublicFeedback) ToPublicFeedback() PublicFeedback {
+	return PublicFeedback{
+		ID:        publicFeedback.ID,
+		CreatedAt: publicFeedback.CreatedAt,
+		PublicFeedbackData: PublicFeedbackData{
+			App:     publicFeedback.App,
+			UserID:  publicFeedback.UserID,
+			Ips:     publicFeedback.Ips,
+			Content: publicFeedback.Content,
+		},
+	}
+}
