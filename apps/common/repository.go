@@ -9,10 +9,31 @@ import (
 
 type CommonRepository interface {
 	SavePageViewRecord(data PageViewRecordData) error
+	SavePublicFeedback(data PublicFeedbackData) error
 }
 
 type CommonRepositoryImpl struct {
 	db *sqlx.DB
+}
+
+// SavePublicFeedback implements CommonRepository.
+func (r CommonRepositoryImpl) SavePublicFeedback(data PublicFeedbackData) error {
+	dbData := DbPublicFeedback{
+		ID:        uuid.New(),
+		App:       data.App,
+		UserID:    data.UserID,
+		Ips:       data.Ips,
+		Content:   data.Content,
+		CreatedAt: time.Now().UTC(),
+	}
+	sql := `
+	INSERT INTO public_feedback
+	(id, app, user_id, ips, content, created_at)
+	VALUES
+	(:id, :app, :user_id, :ips, :content, :created_at);
+	`
+	_, err := r.db.NamedExec(sql, dbData)
+	return err
 }
 
 // SavePageViewRecord implements CommonRepository.
