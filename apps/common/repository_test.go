@@ -72,6 +72,7 @@ func TestCommonRepositoryImpl(t *testing.T) {
 				data.App,
 				data.UserID,
 				pq.StringArray(data.Ips),
+				data.Section,
 				data.Content,
 				sqlmock.AnyArg(),
 			).
@@ -97,6 +98,7 @@ func TestCommonRepositoryImpl(t *testing.T) {
 				data.App,
 				data.UserID,
 				pq.StringArray(data.Ips),
+				data.Section,
 				data.Content,
 				sqlmock.AnyArg(),
 			).

@@ -62,6 +62,7 @@ func postPublicFeedback(repo CommonRepository) echo.HandlerFunc {
 			App:     reqData.App,
 			UserID:  reqData.UserID,
 			Ips:     ips,
+			Section: reqData.Section,
 			Content: reqData.Content,
 		}
 		if err := repo.SavePublicFeedback(data); err != nil {

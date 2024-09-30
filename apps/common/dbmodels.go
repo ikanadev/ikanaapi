@@ -34,6 +34,7 @@ type DbPublicFeedback struct {
 	App       string         `db:"app"`
 	UserID    string         `db:"user_id"`
 	Ips       pq.StringArray `db:"ips"`
+	Section   string         `db:"section"`
 	Content   string         `db:"content"`
 	CreatedAt time.Time      `db:"created_at"`
 }
@@ -46,6 +47,7 @@ func (publicFeedback DbPublicFeedback) ToPublicFeedback() PublicFeedback {
 			App:     publicFeedback.App,
 			UserID:  publicFeedback.UserID,
 			Ips:     publicFeedback.Ips,
+			Section: publicFeedback.Section,
 			Content: publicFeedback.Content,
 		},
 	}

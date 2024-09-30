@@ -23,6 +23,7 @@ type PublicFeedbackData struct {
 	App     string   `json:"app"`
 	UserID  string   `json:"userId"`
 	Ips     []string `json:"ips"`
+	Section string   `json:"section"`
 	Content string   `json:"text"`
 }
 
