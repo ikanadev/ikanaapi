@@ -12,6 +12,7 @@ type Server struct {
 
 func (s Server) setupRoutes() {
 	s.app.POST("/page_view", postPageViewRecord(s.repo))
+	s.app.POST("/public_feedback", postPublicFeedback(s.repo))
 }
 
 func newServer(app *echo.Group, repo CommonRepository) Server {

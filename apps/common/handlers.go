@@ -44,3 +44,29 @@ func postPageViewRecord(repo CommonRepository) echo.HandlerFunc {
 		return c.NoContent(http.StatusCreated)
 	}
 }
+
+func postPublicFeedback(repo CommonRepository) echo.HandlerFunc {
+	type reqData struct {
+		App     string `json:"app"`
+		UserID  string `json:"userId"`
+		Content string `json:"content"`
+		Section string `json:"section"`
+	}
+	return func(c echo.Context) error {
+		var reqData reqData
+		if err := c.Bind(&reqData); err != nil {
+			return err
+		}
+		ips := parseForwarededFor(c)
+		data := PublicFeedbackData{
+			App:     reqData.App,
+			UserID:  reqData.UserID,
+			Ips:     ips,
+			Content: reqData.Content,
+		}
+		if err := repo.SavePublicFeedback(data); err != nil {
+			return err
+		}
+		return c.NoContent(http.StatusCreated)
+	}
+}
