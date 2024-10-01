@@ -27,11 +27,13 @@ func panicIfErr(err error) {
 func main() {
 	config := GetConfig()
 	app := echo.New()
+	// app.Debug = true
 	db := sqlx.MustConnect("postgres", config.DBConn)
 	defer db.Close()
 	migrateDB(config)
 
 	app.Use(middleware.CORS())
+	app.Use(middleware.Logger())
 	boliviaencrisis.SetupServer(app, db)
 	common.SetupServer(app, db)
 
