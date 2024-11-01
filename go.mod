@@ -13,6 +13,7 @@ require (
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/lib/pq v1.10.9
 	github.com/robfig/cron/v3 v3.0.1
+	github.com/sashabaranov/go-openai v1.32.5
 	github.com/stretchr/testify v1.9.0
 )
 
