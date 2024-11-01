@@ -1,4 +1,4 @@
-package main
+package config
 
 import "os"
 
@@ -6,13 +6,14 @@ type Config struct {
 	Port             string
 	DBConn           string
 	MigrationsSource string
+	OpenAIKey        string
 }
 
-//nolint:gochecknoglobals
 var _config = Config{
 	Port:             os.Getenv("PORT"),
 	DBConn:           os.Getenv("DATABASE"),
 	MigrationsSource: os.Getenv("MIGRATIONS_SOURCE"),
+	OpenAIKey:        os.Getenv("OPENAI_API_KEY"),
 }
 
 func GetConfig() Config {

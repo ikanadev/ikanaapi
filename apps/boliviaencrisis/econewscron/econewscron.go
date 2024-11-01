@@ -1,13 +1,10 @@
 package econewscron
 
-import "github.com/jmoiron/sqlx"
+import (
+	"github.com/ikanadev/ikanaapi/config"
+	"github.com/jmoiron/sqlx"
+)
 
-func SetupEconomicNewsCron(db *sqlx.DB) {
-	vision360News := getVision360News()
-	vision360News = filterUnparsedNews(vision360News, db)
-	for i := range vision360News {
-		getVision360NewDetails(vision360News[i])
-		generateAIEcoNewData(vision360News[i])
-	}
-	saveEcoNews(db, vision360News)
+func SetupEconomicNewsCron(db *sqlx.DB, config config.Config) {
+	handleVision360News(db, config)
 }

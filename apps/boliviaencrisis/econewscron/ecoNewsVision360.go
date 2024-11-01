@@ -3,11 +3,31 @@ package econewscron
 import (
 	"fmt"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/gocolly/colly"
 	"github.com/google/uuid"
+	"github.com/ikanadev/ikanaapi/config"
+	"github.com/jmoiron/sqlx"
 )
+
+func handleVision360News(db *sqlx.DB, config config.Config) {
+	vision360News := getVision360News()
+	vision360News = filterUnparsedNews(vision360News, db)
+
+	var wg sync.WaitGroup
+	wg.Add(len(vision360News))
+	for i := range vision360News {
+		go func(index int) {
+			getVision360NewDetails(vision360News[index])
+			generateAIEcoNewData(vision360News[index], config.OpenAIKey)
+			wg.Done()
+		}(i)
+	}
+	wg.Wait()
+	saveEcoNews(db, vision360News)
+}
 
 func getVision360NewDetails(ecoNew *EconomicNew) {
 	c := colly.NewCollector()
@@ -21,7 +41,7 @@ func getVision360NewDetails(ecoNew *EconomicNew) {
 		"julio":      "July",
 		"agosto":     "August",
 		"septiembre": "September",
-		"octubre":    "octubre",
+		"octubre":    "October",
 		"noviembre":  "November",
 		"diciembre":  "December",
 	}
