@@ -6,6 +6,7 @@ import (
 )
 
 func SetupEconomicNewsCron(db *sqlx.DB, config config.Config) {
-	handleVision360News(db, config)
-	handleLaPrensaNews(db, config)
+	// handleVision360News(db, config)
+	// handleLaPrensaNews(db, config)
+	handleElDiaNews(db, config)
 }
