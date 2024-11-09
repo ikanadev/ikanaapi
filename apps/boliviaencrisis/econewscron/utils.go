@@ -107,7 +107,7 @@ Sentimiento: Un número entre 1 y 10 denotando el impacto negativo o positivo de
 6: Impacto moderadamente positivo
 7-8: Impacto muy positivo en la economía familiar
 9-10: Impacto extraordinariamente positivo
-Tags: Un array con las palabras clave específicas de la noticia (1 a 6 tags), enfocándose en el tipo de impacto económico (ejemplo: 'precios', 'empleo', 'salarios', 'dólar', etc.). Ignorar tags genéricos como 'Bolivia', 'economía'.
+Tags: Un array con las palabras clave específicas de la noticia (1 a 4 tags), enfocándose en el tipo de impacto económico (ejemplo: 'precios', 'empleo', 'salarios', 'dólar', etc.). Ignorar tags genéricos como 'Bolivia', 'economía'.
 `
 
 type jsonSchema map[string]interface{}
