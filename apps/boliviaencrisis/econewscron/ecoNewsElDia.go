@@ -1,42 +1,23 @@
 package econewscron
 
 import (
-	"sync"
 	"time"
 
 	"github.com/gocolly/colly"
 	"github.com/google/uuid"
-	"github.com/ikanadev/ikanaapi/config"
-	"github.com/jmoiron/sqlx"
 )
 
-func handleElDiaNews(db *sqlx.DB, config config.Config) {
-	ecoNews := getElDiaNews()
-	ecoNews = filterUnparsedNews(ecoNews, db)
+type ElDiaSource struct {
+	Name string
+}
 
-	var wg sync.WaitGroup
-	wg.Add(len(ecoNews))
-	for i := range ecoNews {
-		go func(index int) {
-			getElDiaNewDetails(ecoNews[index])
-			generateAIEcoNewData(ecoNews[index], config.OpenAIKey)
-			wg.Done()
-		}(i)
+func newElDiaSource() *ElDiaSource {
+	return &ElDiaSource{
+		Name: "El Día",
 	}
-	wg.Wait()
-
-	saveEcoNews(db, ecoNews)
 }
 
-func getElDiaNewDetails(ecoNew *EconomicNew) {
-	c := colly.NewCollector()
-	c.OnHTML("div.info div.content", func(e *colly.HTMLElement) {
-		ecoNew.Content = &e.Text
-	})
-	c.Visit(ecoNew.URL)
-}
-
-func getElDiaNews() []*EconomicNew {
+func (elDiaSource *ElDiaSource) GetEcoNews() []*EconomicNew {
 	c := colly.NewCollector()
 
 	news := make([]*EconomicNew, 0)
@@ -69,4 +50,12 @@ func getElDiaNews() []*EconomicNew {
 
 	c.Visit(baseUrl + "/economia")
 	return news
+}
+
+func (elDiaSource *ElDiaSource) GetEcoNewDetails(ecoNew *EconomicNew) {
+	c := colly.NewCollector()
+	c.OnHTML("div.info div.content", func(e *colly.HTMLElement) {
+		ecoNew.Content = &e.Text
+	})
+	c.Visit(ecoNew.URL)
 }

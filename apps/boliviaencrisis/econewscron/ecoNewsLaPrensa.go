@@ -1,44 +1,27 @@
 package econewscron
 
 import (
-	"sync"
 	"time"
 
 	"github.com/gocolly/colly"
 	"github.com/google/uuid"
-	"github.com/ikanadev/ikanaapi/config"
-	"github.com/jmoiron/sqlx"
 )
 
-func handleLaPrensaNews(db *sqlx.DB, config config.Config) {
-	ecoNews := getLaPrensaNews()
-	ecoNews = filterUnparsedNews(ecoNews, db)
+type LaPrensaSource struct {
+	Name string
+}
 
-	var wg sync.WaitGroup
-	wg.Add(len(ecoNews))
-	for i := range ecoNews {
-		go func(index int) {
-			getLaPrensaNewDetails(ecoNews[index])
-			generateAIEcoNewData(ecoNews[index], config.OpenAIKey)
-			wg.Done()
-		}(i)
+func newLaPrensaSource() *LaPrensaSource {
+	return &LaPrensaSource{
+		Name: "La Prensa",
 	}
-	wg.Wait()
-	saveEcoNews(db, ecoNews)
 }
 
-func getLaPrensaNewDetails(ecoNew *EconomicNew) {
-	c := colly.NewCollector()
-	c.OnHTML("article div.field--name-body", func(e *colly.HTMLElement) {
-		ecoNew.Content = &e.Text
-	})
-	c.Visit(ecoNew.URL)
-}
-
-func getLaPrensaNews() []*EconomicNew {
+func (laPrensaSource *LaPrensaSource) GetEcoNews() []*EconomicNew {
 	c := colly.NewCollector()
 	news := make([]*EconomicNew, 0)
 	baseURL := "https://laprensa.bo"
+
 	c.OnHTML(".views-row", func(e *colly.HTMLElement) {
 		imageUrl := baseURL + e.ChildAttr("img.image-field", "src")
 		title := e.ChildText("h2 a")
@@ -68,4 +51,12 @@ func getLaPrensaNews() []*EconomicNew {
 	c.Visit(baseURL + "/economia")
 
 	return news
+}
+
+func (laPrensaSource *LaPrensaSource) GetEcoNewDetails(ecoNew *EconomicNew) {
+	c := colly.NewCollector()
+	c.OnHTML("article div.field--name-body", func(e *colly.HTMLElement) {
+		ecoNew.Content = &e.Text
+	})
+	c.Visit(ecoNew.URL)
 }

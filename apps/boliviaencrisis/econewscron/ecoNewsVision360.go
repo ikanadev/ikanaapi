@@ -3,33 +3,52 @@ package econewscron
 import (
 	"fmt"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/gocolly/colly"
 	"github.com/google/uuid"
-	"github.com/ikanadev/ikanaapi/config"
-	"github.com/jmoiron/sqlx"
 )
 
-func handleVision360News(db *sqlx.DB, config config.Config) {
-	vision360News := getVision360News()
-	vision360News = filterUnparsedNews(vision360News, db)
-
-	var wg sync.WaitGroup
-	wg.Add(len(vision360News))
-	for i := range vision360News {
-		go func(index int) {
-			getVision360NewDetails(vision360News[index])
-			generateAIEcoNewData(vision360News[index], config.OpenAIKey)
-			wg.Done()
-		}(i)
-	}
-	wg.Wait()
-	saveEcoNews(db, vision360News)
+type Vision360Source struct {
+	Name string
 }
 
-func getVision360NewDetails(ecoNew *EconomicNew) {
+func newVision360Source() *Vision360Source {
+	return &Vision360Source{
+		Name: "Vision360",
+	}
+}
+
+func (vision360Source *Vision360Source) GetEcoNews() []*EconomicNew {
+	c := colly.NewCollector()
+	news := make([]*EconomicNew, 0)
+	baseURL := "https://www.vision360.bo"
+
+	c.OnHTML("article.listado-noticias-relacionadas", func(e *colly.HTMLElement) {
+		title := ""
+		title += e.ChildText("h3.text-noticia-simple-volanta")
+		if len(title) > 0 {
+			title += ", "
+		}
+		title += e.ChildText("h2.text-noticia-simple-titulo")
+		url := baseURL + e.ChildAttr("a", "href")
+		img := e.ChildAttr("img", "src")
+
+		news = append(news, &EconomicNew{
+			ID:      uuid.New(),
+			Title:   title,
+			URL:     url,
+			Image:   &img,
+			Company: vision360Source.Name,
+			Tags:    make([]string, 0),
+		})
+	})
+
+	c.Visit(baseURL + "/economia")
+	return news
+}
+
+func (vision360Source *Vision360Source) GetEcoNewDetails(ecoNew *EconomicNew) {
 	c := colly.NewCollector()
 	monthMap := map[string]string{
 		"enero":      "January",
@@ -66,31 +85,4 @@ func getVision360NewDetails(ecoNew *EconomicNew) {
 	})
 
 	c.Visit(ecoNew.URL)
-}
-
-func getVision360News() []*EconomicNew {
-	c := colly.NewCollector()
-	news := make([]*EconomicNew, 0)
-	baseURL := "https://www.vision360.bo"
-	c.OnHTML("article.listado-noticias-relacionadas", func(e *colly.HTMLElement) {
-		title := ""
-		title += e.ChildText("h3.text-noticia-simple-volanta")
-		if len(title) > 0 {
-			title += ", "
-		}
-		title += e.ChildText("h2.text-noticia-simple-titulo")
-		url := baseURL + e.ChildAttr("a", "href")
-		img := e.ChildAttr("img", "src")
-
-		news = append(news, &EconomicNew{
-			ID:      uuid.New(),
-			Title:   title,
-			URL:     url,
-			Image:   &img,
-			Company: "Visión 360",
-		})
-	})
-
-	c.Visit("https://www.vision360.bo/economia")
-	return news
 }

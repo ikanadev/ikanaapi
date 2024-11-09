@@ -67,3 +67,11 @@ func (ecoNew *EconomicNew) ToDbEconomicNew() *DbEconomicNew {
 		DeletedAt: ecoNew.DeletedAt,
 	}
 }
+
+type EcoNewsSource interface {
+	// Get the news from the main page of the source, it should get the available data
+	GetEcoNews() []*EconomicNew
+	// Get the new aditional data that can't be obtained from the main page (using GetEcoNews).
+	// It must get the EconomicNew.Content field
+	GetEcoNewDetails(ecoNew *EconomicNew)
+}
