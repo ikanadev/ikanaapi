@@ -50,20 +50,6 @@ func (vision360Source *Vision360Source) GetEcoNews() []*EconomicNew {
 
 func (vision360Source *Vision360Source) GetEcoNewDetails(ecoNew *EconomicNew) {
 	c := colly.NewCollector()
-	monthMap := map[string]string{
-		"enero":      "January",
-		"febrero":    "February",
-		"marzo":      "March",
-		"abril":      "April",
-		"mayo":       "May",
-		"junio":      "June",
-		"julio":      "July",
-		"agosto":     "August",
-		"septiembre": "September",
-		"octubre":    "October",
-		"noviembre":  "November",
-		"diciembre":  "December",
-	}
 	c.OnHTML("div.noticia-fecha", func(e *colly.HTMLElement) {
 		dateParts := strings.Split(strings.TrimSpace(e.Text), " ")
 		if len(dateParts) != 6 {

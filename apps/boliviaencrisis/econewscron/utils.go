@@ -12,6 +12,21 @@ import (
 	openai "github.com/sashabaranov/go-openai"
 )
 
+var monthMap map[string]string = map[string]string{
+	"enero":      "January",
+	"febrero":    "February",
+	"marzo":      "March",
+	"abril":      "April",
+	"mayo":       "May",
+	"junio":      "June",
+	"julio":      "July",
+	"agosto":     "August",
+	"septiembre": "September",
+	"octubre":    "October",
+	"noviembre":  "November",
+	"diciembre":  "December",
+}
+
 func filterUnparsedNews(news []*EconomicNew, db *sqlx.DB) []*EconomicNew {
 	urls := make([]string, len(news))
 	for i := range news {
