@@ -110,7 +110,7 @@ Estadísticas o informes que no implican cambios inmediatos
 Noticias sobre negociaciones en curso
 Proyecciones económicas
 
-En caso de que la noticia sea descartada, Resumen debe ser null, Sentimiento 0 y Tags un array vacío.
+En caso de que la noticia sea descartada, Resumen debe ser un string vacío, Sentimiento 0 y Tags un array vacío.
 
 Si la noticia cumple estrictamente con al menos uno de los criterios anteriores, generar:
 

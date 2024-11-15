@@ -18,6 +18,8 @@ func NewEcoNewsCron(db *sqlx.DB, config config.Config) *EcoNewsCron {
 		newVision360Source(),
 		newElDiaSource(),
 		newLaPrensaSource(),
+		newElDeberSource(),
+		newCorreoDelSurSource(),
 	}
 	return &EcoNewsCron{
 		sources: sources,
