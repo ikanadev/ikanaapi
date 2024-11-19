@@ -2,9 +2,11 @@ package econewscron
 
 import (
 	"sync"
+	"time"
 
 	"github.com/ikanadev/ikanaapi/config"
 	"github.com/jmoiron/sqlx"
+	"github.com/robfig/cron/v3"
 )
 
 type EcoNewsCron struct {
@@ -29,7 +31,15 @@ func NewEcoNewsCron(db *sqlx.DB, config config.Config) *EcoNewsCron {
 }
 
 func (ecoNewsCron *EcoNewsCron) SetupCron() {
-	ecoNewsCron.fetchNews()
+	c := cron.New(cron.WithLocation(time.UTC))
+	cronExp := "0 14,16,18,20,24 * * *" // each day at 10,12,14,16 & 18 hours
+	_, err := c.AddFunc(cronExp, func() {
+		ecoNewsCron.fetchNews()
+	})
+	if err != nil {
+		panic(err)
+	}
+	c.Start()
 }
 
 func (ecoNewsCron *EcoNewsCron) fetchNews() {
