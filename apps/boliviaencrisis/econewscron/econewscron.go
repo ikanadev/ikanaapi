@@ -32,7 +32,7 @@ func NewEcoNewsCron(db *sqlx.DB, config config.Config) *EcoNewsCron {
 
 func (ecoNewsCron *EcoNewsCron) SetupCron() {
 	c := cron.New(cron.WithLocation(time.UTC))
-	cronExp := "0 14,16,18,20,24 * * *" // each day at 10,12,14,16 & 18 hours
+	cronExp := "0 14,16,18,20,22 * * *" // each day at 10,12,14,16 & 18 hours
 	_, err := c.AddFunc(cronExp, func() {
 		ecoNewsCron.fetchNews()
 	})

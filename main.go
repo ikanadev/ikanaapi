@@ -6,7 +6,9 @@ import (
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/ikanadev/ikanaapi/apps/boliviaencrisis"
+	"github.com/ikanadev/ikanaapi/apps/boliviaencrisis/econewscron"
 	"github.com/ikanadev/ikanaapi/apps/common"
+	"github.com/ikanadev/ikanaapi/config"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -25,7 +27,7 @@ func panicIfErr(err error) {
 }
 
 func main() {
-	config := GetConfig()
+	config := config.GetConfig()
 	app := echo.New()
 	// app.Debug = true
 	db := sqlx.MustConnect("postgres", config.DBConn)
@@ -42,10 +44,12 @@ func main() {
 	})
 
 	setupPriceCron(db)
+	newsCron := econewscron.NewEcoNewsCron(db, config)
+	newsCron.SetupCron()
 	panicIfErr(app.Start("0.0.0.0:" + config.Port))
 }
 
-func migrateDB(config Config) {
+func migrateDB(config config.Config) {
 	migrator, err := migrate.New(config.MigrationsSource, config.DBConn)
 	panicIfErr(err)
 	if err := migrator.Up(); err != nil && err != migrate.ErrNoChange {

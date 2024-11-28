@@ -45,11 +45,17 @@ func getMainPageData(repo BoliviaCrisisRepository) echo.HandlerFunc {
 			return err
 		}
 
+		ecoNews, err := repo.GetLatestEcoNews()
+		if err != nil {
+			return err
+		}
+
 		return c.JSON(http.StatusOK, MainPageData{
 			USDTPrice:          lastPrice,
 			USDTPriceLastWeek:  lastWeekPrice,
 			USDTPriceLastMonth: lastMonthPrice,
 			LastUSDTRecords:    prices,
+			EcoNews:            ecoNews,
 		})
 	}
 }

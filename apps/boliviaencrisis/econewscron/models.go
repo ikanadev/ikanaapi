@@ -43,7 +43,7 @@ type EconomicNew struct {
 	URL       string     `json:"url"`
 	Date      *time.Time `json:"date"`
 	Image     *string    `json:"image"`
-	Content   *string    // used only to save content in memory to ask AI for summary
+	Content   *string    `json:"-"` // used only to save content in memory to ask AI for summary
 	Summary   *string    `json:"summary"`
 	Company   string     `json:"company"`
 	Tags      []string   `json:"tags"`

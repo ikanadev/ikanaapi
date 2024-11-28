@@ -3,6 +3,7 @@ package boliviaencrisis
 import (
 	"time"
 
+	"github.com/ikanadev/ikanaapi/apps/boliviaencrisis/econewscron"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -10,6 +11,7 @@ type BoliviaCrisisRepository interface {
 	GetAllUSDTPrices() ([]USDTPrice, error)
 	GetLastUSDTPrices() ([]USDTPrice, error)
 	GetUSDTPriceByDate(date time.Time) (int64, error)
+	GetLatestEcoNews() ([]*econewscron.EconomicNew, error)
 }
 
 type BoliviaCrisisRepositoryImpl struct {
@@ -59,6 +61,30 @@ func (r BoliviaCrisisRepositoryImpl) GetAllUSDTPrices() ([]USDTPrice, error) {
 	}
 
 	return prices, nil
+}
+
+// GetLatestEcoNews implements BoliviaCrisisRepository.
+func (r BoliviaCrisisRepositoryImpl) GetLatestEcoNews() ([]*econewscron.EconomicNew, error) {
+	var dbNews []econewscron.DbEconomicNew
+	query := `
+	SELECT * FROM
+	economic_new
+	WHERE summary IS NOT NULL
+	AND trim(summary) != ''
+	AND tags IS NOT NULL
+	AND array_length(tags, 1) > 0
+	order by created_at desc;`
+	err := r.db.Select(&dbNews, query)
+	if err != nil {
+		return nil, err
+	}
+
+	news := make([]*econewscron.EconomicNew, len(dbNews))
+	for i := range dbNews {
+		news[i] = dbNews[i].ToEconomicNew()
+	}
+
+	return news, nil
 }
 
 func newBoliviaCrisisRepositoryImpl(db *sqlx.DB) BoliviaCrisisRepositoryImpl {
