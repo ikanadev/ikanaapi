@@ -1,7 +1,6 @@
 package econewscron
 
 import (
-	"log"
 	"strings"
 	"time"
 
