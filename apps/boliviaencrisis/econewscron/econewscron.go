@@ -54,8 +54,9 @@ func (ecoNewsCron *EcoNewsCron) fetchNews() {
 		go func(source EcoNewsSource) {
 			defer wgSources.Done()
 			ecoNews := source.GetEcoNews()
+			log.Printf("got %d news \n", len(ecoNews))
 			ecoNews = filterUnparsedNews(ecoNews, ecoNewsCron.db)
-			log.Printf("fetched %d news \n", len(ecoNews))
+			log.Printf("filtered %d news \n", len(ecoNews))
 
 			var wgNews sync.WaitGroup
 			wgNews.Add(len(ecoNews))
