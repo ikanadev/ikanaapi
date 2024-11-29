@@ -1,7 +1,6 @@
 package econewscron
 
 import (
-	"fmt"
 	"log"
 	"sync"
 	"time"
