@@ -1,6 +1,7 @@
 package econewscron
 
 import (
+	"log"
 	"strings"
 	"time"
 
@@ -36,6 +37,10 @@ func (correoDelSurSource *CorreoDelSurSource) GetEcoNews() []*EconomicNew {
 			Tags:    make([]string, 0),
 		}
 		ecoNews = append(ecoNews, &ecoNew)
+	})
+
+	c.OnError(func(r *colly.Response, err error) {
+		log.Println("error correo del sur: ", err)
 	})
 
 	c.Visit(baseURL + "/economia")

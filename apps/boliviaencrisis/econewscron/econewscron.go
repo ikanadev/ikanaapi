@@ -18,10 +18,10 @@ type EcoNewsCron struct {
 
 func NewEcoNewsCron(db *sqlx.DB, config config.Config) *EcoNewsCron {
 	sources := []EcoNewsSource{
-		newVision360Source(),
-		newElDiaSource(),
-		newLaPrensaSource(),
-		newElDeberSource(),
+		// newVision360Source(),
+		// newElDiaSource(),
+		// newLaPrensaSource(),
+		// newElDeberSource(),
 		newCorreoDelSurSource(),
 	}
 	return &EcoNewsCron{
