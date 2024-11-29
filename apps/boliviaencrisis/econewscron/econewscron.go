@@ -33,11 +33,10 @@ func NewEcoNewsCron(db *sqlx.DB, config config.Config) *EcoNewsCron {
 
 func (ecoNewsCron *EcoNewsCron) SetupCron() {
 	c := cron.New(cron.WithLocation(time.UTC))
-	cronExp := "*/5 * * * *" // each 5 minutes
-	// cronExp := "0 14,16,18,20,22 * * *" // each day at 10,12,14,16 & 18 hours
+	// cronExp := "*/5 * * * *" // each 5 minutes
+	cronExp := "0 11,14,16,18,20,22 * * *" // each day at 10,12,14,16 & 18 hours
 	_, err := c.AddFunc(cronExp, func() {
-		// ecoNewsCron.fetchNews()
-		log.Printf("###### fetching news at %v\n", time.Now().UTC())
+		ecoNewsCron.fetchNews()
 	})
 	if err != nil {
 		panic(err)
@@ -48,12 +47,14 @@ func (ecoNewsCron *EcoNewsCron) SetupCron() {
 func (ecoNewsCron *EcoNewsCron) fetchNews() {
 	var wgSources sync.WaitGroup
 	wgSources.Add(len(ecoNewsCron.sources))
+	log.Printf("added %d sources to wait group\n", len(ecoNewsCron.sources))
 
 	for _, s := range ecoNewsCron.sources {
 		go func(source EcoNewsSource) {
 			defer wgSources.Done()
 			ecoNews := source.GetEcoNews()
 			ecoNews = filterUnparsedNews(ecoNews, ecoNewsCron.db)
+			log.Printf("fetched %d news \n", len(ecoNews))
 
 			var wgNews sync.WaitGroup
 			wgNews.Add(len(ecoNews))
