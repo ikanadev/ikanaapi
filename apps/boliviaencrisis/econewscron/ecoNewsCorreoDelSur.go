@@ -39,10 +39,6 @@ func (correoDelSurSource *CorreoDelSurSource) GetEcoNews() []*EconomicNew {
 		ecoNews = append(ecoNews, &ecoNew)
 	})
 
-	c.OnError(func(r *colly.Response, err error) {
-		log.Println("error correo del sur: ", err)
-	})
-
 	c.Visit(baseURL + "/economia")
 	return ecoNews
 }

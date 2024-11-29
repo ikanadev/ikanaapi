@@ -1,7 +1,6 @@
 package econewscron
 
 import (
-	"log"
 	"sync"
 	"time"
 
@@ -18,10 +17,10 @@ type EcoNewsCron struct {
 
 func NewEcoNewsCron(db *sqlx.DB, config config.Config) *EcoNewsCron {
 	sources := []EcoNewsSource{
-		// newVision360Source(),
-		// newElDiaSource(),
-		// newLaPrensaSource(),
-		// newElDeberSource(),
+		newVision360Source(),
+		newElDiaSource(),
+		newLaPrensaSource(),
+		newElDeberSource(),
 		newCorreoDelSurSource(),
 	}
 	return &EcoNewsCron{
@@ -33,10 +32,9 @@ func NewEcoNewsCron(db *sqlx.DB, config config.Config) *EcoNewsCron {
 
 func (ecoNewsCron *EcoNewsCron) SetupCron() {
 	c := cron.New(cron.WithLocation(time.UTC))
-	cronExp := "*/5 * * * *" // each 5 minutes
-	// cronExp := "0 14,16,18,20,22 * * *" // each day at 10,12,14,16 & 18 hours
+	// cronExp := "*/5 * * * *" // each 5 minutes
+	cronExp := "0 14,16,18,20,22 * * *" // each day at 10,12,14,16 & 18 hours
 	_, err := c.AddFunc(cronExp, func() {
-		log.Println("fetching news")
 		ecoNewsCron.fetchNews()
 	})
 	if err != nil {
@@ -48,15 +46,12 @@ func (ecoNewsCron *EcoNewsCron) SetupCron() {
 func (ecoNewsCron *EcoNewsCron) fetchNews() {
 	var wgSources sync.WaitGroup
 	wgSources.Add(len(ecoNewsCron.sources))
-	log.Printf("added %d sources to wait group\n", len(ecoNewsCron.sources))
 
 	for _, s := range ecoNewsCron.sources {
 		go func(source EcoNewsSource) {
 			defer wgSources.Done()
 			ecoNews := source.GetEcoNews()
-			log.Printf("got %d news \n", len(ecoNews))
 			ecoNews = filterUnparsedNews(ecoNews, ecoNewsCron.db)
-			log.Printf("filtered %d news \n", len(ecoNews))
 
 			var wgNews sync.WaitGroup
 			wgNews.Add(len(ecoNews))
