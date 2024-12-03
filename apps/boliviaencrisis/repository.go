@@ -73,7 +73,8 @@ func (r BoliviaCrisisRepositoryImpl) GetLatestEcoNews() ([]*econewscron.Economic
 	AND trim(summary) != ''
 	AND tags IS NOT NULL
 	AND array_length(tags, 1) > 0
-	order by created_at desc;`
+	order by created_at desc
+	LIMIT 10;`
 	err := r.db.Select(&dbNews, query)
 	if err != nil {
 		return nil, err
